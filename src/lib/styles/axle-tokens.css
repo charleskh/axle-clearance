@@ -1,0 +1,113 @@
+/**
+ * Axle clearance tokens, layered on the seethespecs design tokens.
+ *
+ * Components use the seethespecs semantic tokens (--background, --surface,
+ * --text-primary, --border, --accent-primary) for chrome, and the --draw-* and
+ * --measure-* tokens below for the drawing. Light is the default, matching
+ * seethespecs; [data-theme='dark'] remaps the same names.
+ */
+
+:root {
+  /* Drawing canvas: drafting paper in light mode. */
+  --draw-canvas: #ffffff;
+  --draw-grid: rgba(138, 94, 44, 0.07);
+  --draw-grid-major: rgba(138, 94, 44, 0.14);
+  --draw-ground: var(--color-bronze-700);
+
+  /* Mechanical parts: steel linework on paper. */
+  --draw-steel: var(--color-steel-900);
+  --draw-steel-strong: var(--color-steel-950);
+  --draw-steel-dim: var(--color-steel-600);
+  --draw-hidden: var(--color-steel-400);
+  --draw-centerline: var(--color-steel-500);
+  --draw-tire: var(--color-steel-950);
+  --draw-fill-casting: #eef2f6;
+  --draw-fill-cover: #e3e9ef;
+  --draw-fill-tube: #f4f7fa;
+  --draw-fill-hub: #e9eef3;
+  --draw-fill-tire: rgba(255, 255, 255, 0.8);
+  --draw-label-halo: #ffffff;
+
+  /* Measurements. Safety orange is the seethespecs highlight, used sparingly. */
+  --measure-clearance: var(--color-safety-600);
+  --measure-baseline: var(--color-steel-600);
+  --measure-delta: var(--color-success-700);
+  --measure-reference: var(--color-bronze-700);
+
+  /* Verification status. */
+  --status-verified: var(--color-success-700);
+  --status-derived: var(--color-info-700);
+  --status-community: #7c3aed;
+  --status-estimated: var(--color-safety-700);
+  --status-schematic: var(--text-muted);
+  --status-calibrated: var(--color-success-700);
+}
+
+[data-theme='dark'] {
+  --draw-canvas: #000000;
+  --draw-grid: rgba(217, 167, 106, 0.06);
+  --draw-grid-major: rgba(217, 167, 106, 0.12);
+  --draw-ground: var(--color-bronze-600);
+
+  --draw-steel: #b9b9b9;
+  --draw-steel-strong: #e5e5e5;
+  --draw-steel-dim: #7d7d7d;
+  --draw-hidden: #5e5e5e;
+  --draw-centerline: var(--color-steel-400);
+  --draw-tire: #dedede;
+  --draw-fill-casting: #161616;
+  --draw-fill-cover: #1d1d1d;
+  --draw-fill-tube: #121212;
+  --draw-fill-hub: #101010;
+  --draw-fill-tire: rgba(0, 0, 0, 0.82);
+  --draw-label-halo: #000000;
+
+  --measure-clearance: var(--color-safety-400);
+  --measure-baseline: var(--color-steel-300);
+  --measure-delta: var(--color-success-500);
+  --measure-reference: var(--color-bronze-400);
+
+  --status-verified: var(--color-success-500);
+  --status-derived: var(--color-info-500);
+  --status-community: #a78bfa;
+  --status-estimated: var(--color-safety-400);
+  --status-schematic: var(--text-muted);
+  --status-calibrated: var(--color-success-500);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-family-base);
+  font-size: 15px;
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--text-link);
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}

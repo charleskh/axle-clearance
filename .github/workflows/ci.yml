@@ -1,0 +1,82 @@
+name: CI and Pages
+
+# Verify every push; publish to GitHub Pages only from main, and only after
+# verification passes.
+#
+# Repository variables (Settings > Secrets and variables > Actions > Variables):
+#   SITE_URL   optional; defaults to https://axle-clearance.seethespecs.com
+#   BASE_PATH  leave empty: with the custom domain the site sits at /.
+#              Only set "/axle-clearance" if it is ever served from
+#              charleskh.github.io/axle-clearance without the domain.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Type check
+        run: pnpm check
+      - name: Unit tests
+        run: pnpm test:unit
+      # WebKit catches iOS-only layout bugs that Chromium never shows.
+      - name: Install browsers
+        run: pnpm exec playwright install --with-deps chromium webkit
+      - name: Browser tests (desktop, Pixel 5, iPhone 13)
+        run: pnpm test:integration
+        env:
+          CI: 'true'
+
+  build:
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          BASE_PATH: ${{ vars.BASE_PATH }}
+          VITE_SITE_URL: ${{ vars.SITE_URL || 'https://axle-clearance.seethespecs.com' }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
