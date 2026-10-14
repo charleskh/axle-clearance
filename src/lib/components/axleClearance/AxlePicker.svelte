@@ -50,6 +50,12 @@
     align-items: center;
     gap: var(--space-2);
     min-width: 0;
+    /* iOS WebKit lets a native select's intrinsic width spill past its box and
+       widen the page, even with min-width: 0. Clip it here; the 4px padding
+       and matching negative margin leave room for the focus outline. */
+    overflow: hidden;
+    padding: 4px;
+    margin: -4px;
   }
   label {
     font-size: 11px;

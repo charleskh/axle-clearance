@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
+  import { onMount, untrack } from 'svelte';
   import { Tween, prefersReducedMotion } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
   import {
@@ -32,6 +32,12 @@
     /** Axle shown first. Read once; later selection is local state. */
     initialAxle: AxleConfiguration;
   } = $props();
+
+  // Marks the page interactive. Clicks before hydration are lost, and browser
+  // tests wait on this rather than on network idle, which some engines never report.
+  onMount(() => {
+    document.documentElement.dataset.hydrated = 'true';
+  });
 
   let axleId = $state(untrack(() => initialAxle.id));
   const axle = $derived(axles.find((a) => a.id === axleId) ?? initialAxle);

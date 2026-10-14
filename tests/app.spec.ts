@@ -5,8 +5,8 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.getByTestId('axle-drawing')).toBeVisible();
-  // Clicks before hydration are lost; wait for the app to be interactive.
-  await page.waitForLoadState('networkidle');
+  // Clicks before hydration are lost; wait for the app to say it is interactive.
+  await page.locator('html[data-hydrated="true"]').waitFor();
 });
 
 async function setDiameter(page: Page, d: number) {
