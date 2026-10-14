@@ -52,7 +52,12 @@
   />
   <div class="ticks" aria-hidden="true">
     {#each Array.from({ length: MAX_TIRE_DIAMETER - MIN_TIRE_DIAMETER + 1 }, (_, i) => MIN_TIRE_DIAMETER + i) as d (d)}
-      <span class:major={d % 2 === 1} class:active={d === diameter}>{d % 2 === 1 ? d : ''}</span>
+      <span
+        class:major={d % 2 === 1}
+        class:active={d === diameter}
+        style:left={`${((d - MIN_TIRE_DIAMETER) / (MAX_TIRE_DIAMETER - MIN_TIRE_DIAMETER)) * 100}%`}
+        >{d % 2 === 1 ? d : ''}</span
+      >
     {/each}
   </div>
   <div class="presets" role="group" aria-label={`${label} presets`}>
@@ -138,32 +143,39 @@
     box-shadow: 0 0 0 4px var(--accent-primary-muted);
   }
 
+  /* Ticks sit exactly where the slider puts each value: 31 at the left end of
+     the track and 44 at the right, inset by the thumb radius (10px). */
   .ticks {
-    display: grid;
-    grid-template-columns: repeat(14, 1fr);
+    position: relative;
+    height: 24px;
+    margin: -2px 10px 0;
     font-family: var(--font-family-mono);
     font-size: 10px;
     color: var(--text-muted);
-    margin: -4px 9px 0;
   }
   .ticks span {
-    text-align: center;
-    border-left: 1px solid var(--border-strong);
-    height: 14px;
-    line-height: 22px;
+    position: absolute;
+    top: 0;
     transform: translateX(-50%);
-    margin-left: 50%;
-    width: 0;
-    overflow: visible;
+    padding-top: 10px;
+    line-height: 1;
     white-space: nowrap;
-    display: flex;
-    justify-content: center;
   }
-  .ticks span:not(.major) {
-    height: 6px;
+  .ticks span::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 4px;
+    border-left: 1px solid var(--border-strong);
+  }
+  .ticks span.major::before {
+    height: 7px;
   }
   .ticks span.active {
     color: var(--accent-primary);
+  }
+  .ticks span.active::before {
     border-color: var(--accent-primary);
   }
 
