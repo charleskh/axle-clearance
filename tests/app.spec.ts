@@ -245,3 +245,7 @@ test('a smaller selected tire reads as a loss', async ({ page }) => {
   await page.getByTestId('mode-overlay').click();
   await expect(page.locator('[data-dimension="clearance-delta"]')).toContainText('lost');
 });
+
+test('a normal build has no staging banner', async ({ page }) => {
+  await expect(page.getByTestId('staging-banner')).toHaveCount(0);
+});
